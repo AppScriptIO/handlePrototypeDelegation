@@ -1,0 +1,18 @@
+{
+	"name": "@dependency/handlePrototypeDelegation",
+	"version": "1.1.2",
+	"main": "./entrypoint/programmaticAPI",
+	"scripts": {
+		"test": "yarn run scriptManager @deployment/deploymentScript \".test.default({ testPath: ['./test'] })\"",
+		"test-break": "yarn run scriptManager shouldCompileScript=true @deployment/deploymentScript \".test.default({ testPath: ['./test'], shouldDebugger: true, shouldCompileTest: true })\"",
+		"build": "yarn run scriptManager shouldCompileScript=true @deployment/deploymentScript \".buildSourceCode.moduleProject({}, {compile:[/**'./test'*/]})\"",
+		"buildAndRelease": "yarn run scriptManager shouldCompileScript=true @deployment/deploymentScript \".buildAndRelease.moduleProject({})\""
+	},
+	"devDependencies": {
+		"@deployment/deploymentScript": "https://github.com/AppScriptIO/deploymentScript#semver:^2.x.x",
+		"@deployment/javascriptStaticAnalysis": "https://github.com/AppScriptIO/javascriptStaticAnalysis#semver:^2.x.x",
+		"@deployment/javascriptTranspilation": "https://github.com/AppScriptIO/javascriptTranspilation#semver:^2.x.x",
+		"@deployment/scriptManager": "https://github.com/AppScriptIO/scriptManager#semver:^2.x.x",
+		"typescript": "^3.3.3333"
+	}
+}
