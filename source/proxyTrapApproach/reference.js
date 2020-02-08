@@ -1,11 +1,11 @@
-// expose Symbol keys of multiple delegation proxy functionality. - the 'Reference' of functionality symnol keys
-export const $ = {
-  // delegation list of prototypes
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.$ = void 0;
+const $ = {
+
   list: Symbol('MultipleDelegation: list'),
   getter: Symbol('MultipleDelegation: getter'),
   setter: Symbol('MultipleDelegation: setter'),
-  // this symbol must be global to allow multiple versions of the same module to work together.
-  target: Symbol.for('MultipleDelegation: non proxied target'), // the original target which should be wrapped with proxy.
-  metadata: Symbol('metadata'), // debugging purposes
-  argument: Symbol('argument'), // a symbol that is used for allowing passing additional arguments to the Reflect methods/handlers (as the native implementation prevents extra arguments).
-}
+
+  target: Symbol.for('MultipleDelegation: non proxied target'),
+  metadata: Symbol('metadata'),
+  argument: Symbol('argument') };exports.$ = $;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NvdXJjZS9wcm94eVRyYXBBcHByb2FjaC9yZWZlcmVuY2UuanMiXSwibmFtZXMiOlsiJCIsImxpc3QiLCJTeW1ib2wiLCJnZXR0ZXIiLCJzZXR0ZXIiLCJ0YXJnZXQiLCJmb3IiLCJtZXRhZGF0YSIsImFyZ3VtZW50Il0sIm1hcHBpbmdzIjoiO0FBQ08sTUFBTUEsQ0FBQyxHQUFHOztBQUVmQyxFQUFBQSxJQUFJLEVBQUVDLE1BQU0sQ0FBQywwQkFBRCxDQUZHO0FBR2ZDLEVBQUFBLE1BQU0sRUFBRUQsTUFBTSxDQUFDLDRCQUFELENBSEM7QUFJZkUsRUFBQUEsTUFBTSxFQUFFRixNQUFNLENBQUMsNEJBQUQsQ0FKQzs7QUFNZkcsRUFBQUEsTUFBTSxFQUFFSCxNQUFNLENBQUNJLEdBQVAsQ0FBVyx3Q0FBWCxDQU5PO0FBT2ZDLEVBQUFBLFFBQVEsRUFBRUwsTUFBTSxDQUFDLFVBQUQsQ0FQRDtBQVFmTSxFQUFBQSxRQUFRLEVBQUVOLE1BQU0sQ0FBQyxVQUFELENBUkQsRUFBVixDIiwic291cmNlc0NvbnRlbnQiOlsiLy8gZXhwb3NlIFN5bWJvbCBrZXlzIG9mIG11bHRpcGxlIGRlbGVnYXRpb24gcHJveHkgZnVuY3Rpb25hbGl0eS4gLSB0aGUgJ1JlZmVyZW5jZScgb2YgZnVuY3Rpb25hbGl0eSBzeW1ub2wga2V5c1xuZXhwb3J0IGNvbnN0ICQgPSB7XG4gIC8vIGRlbGVnYXRpb24gbGlzdCBvZiBwcm90b3R5cGVzXG4gIGxpc3Q6IFN5bWJvbCgnTXVsdGlwbGVEZWxlZ2F0aW9uOiBsaXN0JyksXG4gIGdldHRlcjogU3ltYm9sKCdNdWx0aXBsZURlbGVnYXRpb246IGdldHRlcicpLFxuICBzZXR0ZXI6IFN5bWJvbCgnTXVsdGlwbGVEZWxlZ2F0aW9uOiBzZXR0ZXInKSxcbiAgLy8gdGhpcyBzeW1ib2wgbXVzdCBiZSBnbG9iYWwgdG8gYWxsb3cgbXVsdGlwbGUgdmVyc2lvbnMgb2YgdGhlIHNhbWUgbW9kdWxlIHRvIHdvcmsgdG9nZXRoZXIuXG4gIHRhcmdldDogU3ltYm9sLmZvcignTXVsdGlwbGVEZWxlZ2F0aW9uOiBub24gcHJveGllZCB0YXJnZXQnKSwgLy8gdGhlIG9yaWdpbmFsIHRhcmdldCB3aGljaCBzaG91bGQgYmUgd3JhcHBlZCB3aXRoIHByb3h5LlxuICBtZXRhZGF0YTogU3ltYm9sKCdtZXRhZGF0YScpLCAvLyBkZWJ1Z2dpbmcgcHVycG9zZXNcbiAgYXJndW1lbnQ6IFN5bWJvbCgnYXJndW1lbnQnKSwgLy8gYSBzeW1ib2wgdGhhdCBpcyB1c2VkIGZvciBhbGxvd2luZyBwYXNzaW5nIGFkZGl0aW9uYWwgYXJndW1lbnRzIHRvIHRoZSBSZWZsZWN0IG1ldGhvZHMvaGFuZGxlcnMgKGFzIHRoZSBuYXRpdmUgaW1wbGVtZW50YXRpb24gcHJldmVudHMgZXh0cmEgYXJndW1lbnRzKS5cbn1cbiJdfQ==

@@ -1,3 +1,4 @@
-export * from './proxyTrapApproach/script.js'
-export * from './newChainCreationApproach/newChainCreationApproach.js'
-export * from './prototypeChainDebug.js'
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });var _script = require("./proxyTrapApproach/script.js");Object.keys(_script).forEach(function (key) {if (key === "default" || key === "__esModule") return;Object.defineProperty(exports, key, { enumerable: true, get: function () {return _script[key];} });});
+var _newChainCreationApproach = require("./newChainCreationApproach/newChainCreationApproach.js");Object.keys(_newChainCreationApproach).forEach(function (key) {if (key === "default" || key === "__esModule") return;Object.defineProperty(exports, key, { enumerable: true, get: function () {return _newChainCreationApproach[key];} });});
+var _prototypeChainDebug = require("./prototypeChainDebug.js");Object.keys(_prototypeChainDebug).forEach(function (key) {if (key === "default" || key === "__esModule") return;Object.defineProperty(exports, key, { enumerable: true, get: function () {return _prototypeChainDebug[key];} });});
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NvdXJjZS9zY3JpcHQuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IjJFQUFBO0FBQ0E7QUFDQSIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCAqIGZyb20gJy4vcHJveHlUcmFwQXBwcm9hY2gvc2NyaXB0LmpzJ1xuZXhwb3J0ICogZnJvbSAnLi9uZXdDaGFpbkNyZWF0aW9uQXBwcm9hY2gvbmV3Q2hhaW5DcmVhdGlvbkFwcHJvYWNoLmpzJ1xuZXhwb3J0ICogZnJvbSAnLi9wcm90b3R5cGVDaGFpbkRlYnVnLmpzJ1xuIl19

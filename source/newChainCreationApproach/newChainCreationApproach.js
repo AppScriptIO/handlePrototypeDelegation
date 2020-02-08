@@ -1,103 +1,101 @@
-//! Deprecated: This is an old quick specific implementation.
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.MultiplePrototypeChain = void 0;
 
 let self = class MultiplePrototypeChain {
   static newChainOnInstanceCreation({
-    Class, // wrap constructor of Class and create a new chain for each new instance.
-    contextInstance, // The instnace to be added to the chain.
-  }) {
+    Class,
+    contextInstance })
+  {
     return new Proxy(Class, {
       construct: (target, argumentsList, newConstructorFunc) => {
-        let instance = Reflect.construct(target, argumentsList)
-        instance = self.createUniqueProtoChain({ object: instance })
+        let instance = Reflect.construct(target, argumentsList);
+        instance = self.createUniqueProtoChain({ object: instance });
         instance = self.insertObjectToPrototypeChain({
           prototypeChain: instance,
           objectToAdd: contextInstance,
-          beforePrototype: contextInstance.__proto__.__proto__,
-        })
-        return instance
-      },
-    })
+          beforePrototype: contextInstance.__proto__.__proto__ });
+
+        return instance;
+      } });
+
   }
 
   static createUniqueProtoChain({ object = null }) {
-    if (object == null || object.constructor == Object || object.constructor == Function) return object
+    if (object == null || object.constructor == Object || object.constructor == Function) return object;
 
-    let delegatedPrototype = Object.getPrototypeOf(object)
-    let nextPointerPrototype = self.createUniqueProtoChain({ object: delegatedPrototype })
-    let pointerPrototype = Object.create(nextPointerPrototype)
+    let delegatedPrototype = Object.getPrototypeOf(object);
+    let nextPointerPrototype = self.createUniqueProtoChain({ object: delegatedPrototype });
+    let pointerPrototype = Object.create(nextPointerPrototype);
     if (!pointerPrototype.hasOwnProperty('delegatedPrototype')) {
-      Object.defineProperty(pointerPrototype, 'delegatedPrototype', { value: object, writable: true, enumerable: true, configurable: true })
+      Object.defineProperty(pointerPrototype, 'delegatedPrototype', { value: object, writable: true, enumerable: true, configurable: true });
     }
-    let proxyHandler = self.handlerMultiplePrototypeChainPattern({ delegatedPrototype: object })
-    pointerPrototype = new Proxy(pointerPrototype, proxyHandler)
-    return pointerPrototype
+    let proxyHandler = self.handlerMultiplePrototypeChainPattern({ delegatedPrototype: object });
+    pointerPrototype = new Proxy(pointerPrototype, proxyHandler);
+    return pointerPrototype;
   }
 
   static handlerMultiplePrototypeChainPattern({ delegatedPrototype }) {
     return {
-      get: function(target, property, receiver) {
+      get: function (target, property, receiver) {
         switch (property) {
           case 'delegatedPrototype':
-            return Reflect.get(target, property)
-            break
+            return Reflect.get(target, property);
+            break;
           case '__proto__':
-            return Object.getPrototypeOf(receiver)
-            break
+            return Object.getPrototypeOf(receiver);
+            break;
           default:
-            break
-        }
+            break;}
+
         if (delegatedPrototype.hasOwnProperty(property)) {
-          return Reflect.get(delegatedPrototype, property)
+          return Reflect.get(delegatedPrototype, property);
         } else if (Object.getPrototypeOf(target)) {
-          return Reflect.get(Object.getPrototypeOf(target), property)
+          return Reflect.get(Object.getPrototypeOf(target), property);
         } else {
-          return undefined
+          return undefined;
         }
       },
-      set: function(target, property, value, receiver) {
+      set: function (target, property, value, receiver) {
         switch (property) {
           case '__proto__':
-            return Object.setPrototypeOf(target, value)
-            break
+            return Object.setPrototypeOf(target, value);
+            break;
           default:
-            return Reflect.set(delegatedPrototype, property, value)
-            break
-        }
+            return Reflect.set(delegatedPrototype, property, value);
+            break;}
+
       },
-      has: function(target, prop) {
-        return prop in delegatedPrototype
-      },
-    }
+      has: function (target, prop) {
+        return prop in delegatedPrototype;
+      } };
+
   }
 
-  // Add an instance prototype to a prototype chain just before the instance's constructor prototype.
+
   static insertObjectToPrototypeChain({
-    prototypeChain, // chain to add to
-    objectToAdd, // object to add as prototype
-    beforePrototype, // location of insertion
-  }) {
-    // find position of beforePrototype with references to next and previous prototype
-    let previousPrototype = prototypeChain // starting point
-    let nextPrototype = prototypeChain.__proto__
+    prototypeChain,
+    objectToAdd,
+    beforePrototype })
+  {
+
+    let previousPrototype = prototypeChain;
+    let nextPrototype = prototypeChain.__proto__;
     while (nextPrototype && beforePrototype !== nextPrototype.delegatedPrototype) {
-      previousPrototype = nextPrototype
-      nextPrototype = nextPrototype.__proto__
+      previousPrototype = nextPrototype;
+      nextPrototype = nextPrototype.__proto__;
     }
-    if (!nextPrototype) throw new Error('• Couldn`t add object to prototype chain. No matching "beforePrototype" was found.') // if no appropriate insertion position was found.
-    // create pointerPrototype to add between the previous and next prototypes.
-    let pointerPrototype = Object.create(nextPrototype)
+    if (!nextPrototype) throw new Error('• Couldn`t add object to prototype chain. No matching "beforePrototype" was found.');
+
+    let pointerPrototype = Object.create(nextPrototype);
     if (!pointerPrototype.hasOwnProperty('delegatedPrototype')) {
-      Object.defineProperty(pointerPrototype, 'delegatedPrototype', { value: objectToAdd, writable: true, enumerable: true, configurable: true })
+      Object.defineProperty(pointerPrototype, 'delegatedPrototype', { value: objectToAdd, writable: true, enumerable: true, configurable: true });
     }
     pointerPrototype = new Proxy(
-      pointerPrototype,
-      self.handlerMultiplePrototypeChainPattern({
-        delegatedPrototype: objectToAdd,
-      }),
-    )
-    Object.setPrototypeOf(previousPrototype, pointerPrototype)
-    return prototypeChain
-  }
-}
+    pointerPrototype,
+    self.handlerMultiplePrototypeChainPattern({
+      delegatedPrototype: objectToAdd }));
 
-export { self as MultiplePrototypeChain }
+
+    Object.setPrototypeOf(previousPrototype, pointerPrototype);
+    return prototypeChain;
+  }};exports.MultiplePrototypeChain = self;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NvdXJjZS9uZXdDaGFpbkNyZWF0aW9uQXBwcm9hY2gvbmV3Q2hhaW5DcmVhdGlvbkFwcHJvYWNoLmpzIl0sIm5hbWVzIjpbInNlbGYiLCJNdWx0aXBsZVByb3RvdHlwZUNoYWluIiwibmV3Q2hhaW5Pbkluc3RhbmNlQ3JlYXRpb24iLCJDbGFzcyIsImNvbnRleHRJbnN0YW5jZSIsIlByb3h5IiwiY29uc3RydWN0IiwidGFyZ2V0IiwiYXJndW1lbnRzTGlzdCIsIm5ld0NvbnN0cnVjdG9yRnVuYyIsImluc3RhbmNlIiwiUmVmbGVjdCIsImNyZWF0ZVVuaXF1ZVByb3RvQ2hhaW4iLCJvYmplY3QiLCJpbnNlcnRPYmplY3RUb1Byb3RvdHlwZUNoYWluIiwicHJvdG90eXBlQ2hhaW4iLCJvYmplY3RUb0FkZCIsImJlZm9yZVByb3RvdHlwZSIsIl9fcHJvdG9fXyIsImNvbnN0cnVjdG9yIiwiT2JqZWN0IiwiRnVuY3Rpb24iLCJkZWxlZ2F0ZWRQcm90b3R5cGUiLCJnZXRQcm90b3R5cGVPZiIsIm5leHRQb2ludGVyUHJvdG90eXBlIiwicG9pbnRlclByb3RvdHlwZSIsImNyZWF0ZSIsImhhc093blByb3BlcnR5IiwiZGVmaW5lUHJvcGVydHkiLCJ2YWx1ZSIsIndyaXRhYmxlIiwiZW51bWVyYWJsZSIsImNvbmZpZ3VyYWJsZSIsInByb3h5SGFuZGxlciIsImhhbmRsZXJNdWx0aXBsZVByb3RvdHlwZUNoYWluUGF0dGVybiIsImdldCIsInByb3BlcnR5IiwicmVjZWl2ZXIiLCJ1bmRlZmluZWQiLCJzZXQiLCJzZXRQcm90b3R5cGVPZiIsImhhcyIsInByb3AiLCJwcmV2aW91c1Byb3RvdHlwZSIsIm5leHRQcm90b3R5cGUiLCJFcnJvciJdLCJtYXBwaW5ncyI6Ijs7QUFFQSxJQUFJQSxJQUFJLEdBQUcsTUFBTUMsc0JBQU4sQ0FBNkI7QUFDdEMsU0FBT0MsMEJBQVAsQ0FBa0M7QUFDaENDLElBQUFBLEtBRGdDO0FBRWhDQyxJQUFBQSxlQUZnQyxF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QSxRQUFJLENBQUNuQixnQkFBZ0IsQ0FBQ0UsY0FBakIsQ0FBZ0Msb0JBQWhDLENBQUwsRUFBNEQ7QUFDMURQLE1BQUFBLE1BQU0sQ0FBQ1EsY0FBUCxDQUFzQkgsZ0JBQXRCLEVBQXdDLG9CQUF4QyxFQUE4RCxFQUFFSSxLQUFLLEVBQUViLFdBQVQsRUFBc0JjLFFBQVEsRUFBRSxJQUFoQyxFQUFzQ0MsVUFBVSxFQUFFLElBQWxELEVBQXdEQyxZQUFZLEVBQUUsSUFBdEUsRUFBOUQ7QUFDRDtBQUNEUCxJQUFBQSxnQkFBZ0IsR0FBRyxJQUFJcEIsS0FBSjtBQUNqQm9CLElBQUFBLGdCQURpQjtBQUVqQnpCLElBQUFBLElBQUksQ0FBQ2tDLG9DQUFMLENBQTBDO0FBQ3hDWixNQUFBQSxrQkFBa0IsRUFBRU4sV0FEb0IsRUFBMUMsQ0FGaUIsQ0FBbkI7OztBQU1BSSxJQUFBQSxNQUFNLENBQUNvQixjQUFQLENBQXNCRyxpQkFBdEIsRUFBeUNsQixnQkFBekM7QUFDQSxXQUFPVixjQUFQO0FBQ0QsR0FqR3FDLENBQXhDLEMiLCJzb3VyY2VzQ29udGVudCI6WyIvLyEgRGVwcmVjYXRlZDogVGhpcyBpcyBhbiBvbGQgcXVpY2sgc3BlY2lmaWMgaW1wbGVtZW50YXRpb24uXHJcblxyXG5sZXQgc2VsZiA9IGNsYXNzIE11bHRpcGxlUHJvdG90eXBlQ2hhaW4ge1xyXG4gIHN0YXRpYyBuZXdDaGFpbk9uSW5zdGFuY2VDcmVhdGlvbih7XHJcbiAgICBDbGFzcywgLy8gd3JhcCBjb25zdHJ1Y3RvciBvZiBDbGFzcyBhbmQgY3JlYXRlIGEgbmV3IGNoYWluIGZvciBlYWNoIG5ldyBpbnN0YW5jZS5cclxuICAgIGNvbnRleHRJbnN0YW5jZSwgLy8gVGhlIGluc3RuYWNlIHRvIGJlIGFkZGVkIHRvIHRoZSBjaGFpbi5cclxuICB9KSB7XHJcbiAgICByZXR1cm4gbmV3IFByb3h5KENsYXNzLCB7XHJcbiAgICAgIGNvbnN0cnVjdDogKHRhcmdldCwgYXJndW1lbnRzTGlzdCwgbmV3Q29uc3RydWN0b3JGdW5jKSA9PiB7XHJcbiAgICAgICAgbGV0IGluc3RhbmNlID0gUmVmbGVjdC5jb25zdHJ1Y3QodGFyZ2V0LCBhcmd1bWVudHNMaXN0KVxyXG4gICAgICAgIGluc3RhbmNlID0gc2VsZi5jcmVhdGVVbmlxdWVQcm90b0NoYWluKHsgb2JqZWN0OiBpbnN0YW5jZSB9KVxyXG4gICAgICAgIGluc3RhbmNlID0gc2VsZi5pbnNlcnRPYmplY3RUb1Byb3RvdHlwZUNoYWluKHtcclxuICAgICAgICAgIHByb3RvdHlwZUNoYWluOiBpbnN0YW5jZSxcclxuICAgICAgICAgIG9iamVjdFRvQWRkOiBjb250ZXh0SW5zdGFuY2UsXHJcbiAgICAgICAgICBiZWZvcmVQcm90b3R5cGU6IGNvbnRleHRJbnN0YW5jZS5fX3Byb3RvX18uX19wcm90b19fLFxyXG4gICAgICAgIH0pXHJcbiAgICAgICAgcmV0dXJuIGluc3RhbmNlXHJcbiAgICAgIH0sXHJcbiAgICB9KVxyXG4gIH1cclxuXHJcbiAgc3RhdGljIGNyZWF0ZVVuaXF1ZVByb3RvQ2hhaW4oeyBvYmplY3QgPSBudWxsIH0pIHtcclxuICAgIGlmIChvYmplY3QgPT0gbnVsbCB8fCBvYmplY3QuY29uc3RydWN0b3IgPT0gT2JqZWN0IHx8IG9iamVjdC5jb25zdHJ1Y3RvciA9PSBGdW5jdGlvbikgcmV0dXJuIG9iamVjdFxyXG5cclxuICAgIGxldCBkZWxlZ2F0ZWRQcm90b3R5cGUgPSBPYmplY3QuZ2V0UHJvdG90eXBlT2Yob2JqZWN0KVxyXG4gICAgbGV0IG5leHRQb2ludGVyUHJvdG90eXBlID0gc2VsZi5jcmVhdGVVbmlxdWVQcm90b0NoYWluKHsgb2JqZWN0OiBkZWxlZ2F0ZWRQcm90b3R5cGUgfSlcclxuICAgIGxldCBwb2ludGVyUHJvdG90eXBlID0gT2JqZWN0LmNyZWF0ZShuZXh0UG9pbnRlclByb3RvdHlwZSlcclxuICAgIGlmICghcG9pbnRlclByb3RvdHlwZS5oYXNPd25Qcm9wZXJ0eSgnZGVsZWdhdGVkUHJvdG90eXBlJykpIHtcclxuICAgICAgT2JqZWN0LmRlZmluZVByb3BlcnR5KHBvaW50ZXJQcm90b3R5cGUsICdkZWxlZ2F0ZWRQcm90b3R5cGUnLCB7IHZhbHVlOiBvYmplY3QsIHdyaXRhYmxlOiB0cnVlLCBlbnVtZXJhYmxlOiB0cnVlLCBjb25maWd1cmFibGU6IHRydWUgfSlcclxuICAgIH1cclxuICAgIGxldCBwcm94eUhhbmRsZXIgPSBzZWxmLmhhbmRsZXJNdWx0aXBsZVByb3RvdHlwZUNoYWluUGF0dGVybih7IGRlbGVnYXRlZFByb3RvdHlwZTogb2JqZWN0IH0pXHJcbiAgICBwb2ludGVyUHJvdG90eXBlID0gbmV3IFByb3h5KHBvaW50ZXJQcm90b3R5cGUsIHByb3h5SGFuZGxlcilcclxuICAgIHJldHVybiBwb2ludGVyUHJvdG90eXBlXHJcbiAgfVxyXG5cclxuICBzdGF0aWMgaGFuZGxlck11bHRpcGxlUHJvdG90eXBlQ2hhaW5QYXR0ZXJuKHsgZGVsZWdhdGVkUHJvdG90eXBlIH0pIHtcclxuICAgIHJldHVybiB7XHJcbiAgICAgIGdldDogZnVuY3Rpb24odGFyZ2V0LCBwcm9wZXJ0eSwgcmVjZWl2ZXIpIHtcclxuICAgICAgICBzd2l0Y2ggKHByb3BlcnR5KSB7XHJcbiAgICAgICAgICBjYXNlICdkZWxlZ2F0ZWRQcm90b3R5cGUnOlxyXG4gICAgICAgICAgICByZXR1cm4gUmVmbGVjdC5nZXQodGFyZ2V0LCBwcm9wZXJ0eSlcclxuICAgICAgICAgICAgYnJlYWtcclxuICAgICAgICAgIGNhc2UgJ19fcHJvdG9fXyc6XHJcbiAgICAgICAgICAgIHJldHVybiBPYmplY3QuZ2V0UHJvdG90eXBlT2YocmVjZWl2ZXIpXHJcbiAgICAgICAgICAgIGJyZWFrXHJcbiAgICAgICAgICBkZWZhdWx0OlxyXG4gICAgICAgICAgICBicmVha1xyXG4gICAgICAgIH1cclxuICAgICAgICBpZiAoZGVsZWdhdGVkUHJvdG90eXBlLmhhc093blByb3BlcnR5KHByb3BlcnR5KSkge1xyXG4gICAgICAgICAgcmV0dXJuIFJlZmxlY3QuZ2V0KGRlbGVnYXRlZFByb3RvdHlwZSwgcHJvcGVydHkpXHJcbiAgICAgICAgfSBlbHNlIGlmIChPYmplY3QuZ2V0UHJvdG90eXBlT2YodGFyZ2V0KSkge1xyXG4gICAgICAgICAgcmV0dXJuIFJlZmxlY3QuZ2V0KE9iamVjdC5nZXRQcm90b3R5cGVPZih0YXJnZXQpLCBwcm9wZXJ0eSlcclxuICAgICAgICB9IGVsc2Uge1xyXG4gICAgICAgICAgcmV0dXJuIHVuZGVmaW5lZFxyXG4gICAgICAgIH1cclxuICAgICAgfSxcclxuICAgICAgc2V0OiBmdW5jdGlvbih0YXJnZXQsIHByb3BlcnR5LCB2YWx1ZSwgcmVjZWl2ZXIpIHtcclxuICAgICAgICBzd2l0Y2ggKHByb3BlcnR5KSB7XHJcbiAgICAgICAgICBjYXNlICdfX3Byb3RvX18nOlxyXG4gICAgICAgICAgICByZXR1cm4gT2JqZWN0LnNldFByb3RvdHlwZU9mKHRhcmdldCwgdmFsdWUpXHJcbiAgICAgICAgICAgIGJyZWFrXHJcbiAgICAgICAgICBkZWZhdWx0OlxyXG4gICAgICAgICAgICByZXR1cm4gUmVmbGVjdC5zZXQoZGVsZWdhdGVkUHJvdG90eXBlLCBwcm9wZXJ0eSwgdmFsdWUpXHJcbiAgICAgICAgICAgIGJyZWFrXHJcbiAgICAgICAgfVxyXG4gICAgICB9LFxyXG4gICAgICBoYXM6IGZ1bmN0aW9uKHRhcmdldCwgcHJvcCkge1xyXG4gICAgICAgIHJldHVybiBwcm9wIGluIGRlbGVnYXRlZFByb3RvdHlwZVxyXG4gICAgICB9LFxyXG4gICAgfVxyXG4gIH1cclxuXHJcbiAgLy8gQWRkIGFuIGluc3RhbmNlIHByb3RvdHlwZSB0byBhIHByb3RvdHlwZSBjaGFpbiBqdXN0IGJlZm9yZSB0aGUgaW5zdGFuY2UncyBjb25zdHJ1Y3RvciBwcm90b3R5cGUuXHJcbiAgc3RhdGljIGluc2VydE9iamVjdFRvUHJvdG90eXBlQ2hhaW4oe1xyXG4gICAgcHJvdG90eXBlQ2hhaW4sIC8vIGNoYWluIHRvIGFkZCB0b1xyXG4gICAgb2JqZWN0VG9BZGQsIC8vIG9iamVjdCB0byBhZGQgYXMgcHJvdG90eXBlXHJcbiAgICBiZWZvcmVQcm90b3R5cGUsIC8vIGxvY2F0aW9uIG9mIGluc2VydGlvblxyXG4gIH0pIHtcclxuICAgIC8vIGZpbmQgcG9zaXRpb24gb2YgYmVmb3JlUHJvdG90eXBlIHdpdGggcmVmZXJlbmNlcyB0byBuZXh0IGFuZCBwcmV2aW91cyBwcm90b3R5cGVcclxuICAgIGxldCBwcmV2aW91c1Byb3RvdHlwZSA9IHByb3RvdHlwZUNoYWluIC8vIHN0YXJ0aW5nIHBvaW50XHJcbiAgICBsZXQgbmV4dFByb3RvdHlwZSA9IHByb3RvdHlwZUNoYWluLl9fcHJvdG9fX1xyXG4gICAgd2hpbGUgKG5leHRQcm90b3R5cGUgJiYgYmVmb3JlUHJvdG90eXBlICE9PSBuZXh0UHJvdG90eXBlLmRlbGVnYXRlZFByb3RvdHlwZSkge1xyXG4gICAgICBwcmV2aW91c1Byb3RvdHlwZSA9IG5leHRQcm90b3R5cGVcclxuICAgICAgbmV4dFByb3RvdHlwZSA9IG5leHRQcm90b3R5cGUuX19wcm90b19fXHJcbiAgICB9XHJcbiAgICBpZiAoIW5leHRQcm90b3R5cGUpIHRocm93IG5ldyBFcnJvcign4oCiIENvdWxkbmB0IGFkZCBvYmplY3QgdG8gcHJvdG90eXBlIGNoYWluLiBObyBtYXRjaGluZyBcImJlZm9yZVByb3RvdHlwZVwiIHdhcyBmb3VuZC4nKSAvLyBpZiBubyBhcHByb3ByaWF0ZSBpbnNlcnRpb24gcG9zaXRpb24gd2FzIGZvdW5kLlxyXG4gICAgLy8gY3JlYXRlIHBvaW50ZXJQcm90b3R5cGUgdG8gYWRkIGJldHdlZW4gdGhlIHByZXZpb3VzIGFuZCBuZXh0IHByb3RvdHlwZXMuXHJcbiAgICBsZXQgcG9pbnRlclByb3RvdHlwZSA9IE9iamVjdC5jcmVhdGUobmV4dFByb3RvdHlwZSlcclxuICAgIGlmICghcG9pbnRlclByb3RvdHlwZS5oYXNPd25Qcm9wZXJ0eSgnZGVsZWdhdGVkUHJvdG90eXBlJykpIHtcclxuICAgICAgT2JqZWN0LmRlZmluZVByb3BlcnR5KHBvaW50ZXJQcm90b3R5cGUsICdkZWxlZ2F0ZWRQcm90b3R5cGUnLCB7IHZhbHVlOiBvYmplY3RUb0FkZCwgd3JpdGFibGU6IHRydWUsIGVudW1lcmFibGU6IHRydWUsIGNvbmZpZ3VyYWJsZTogdHJ1ZSB9KVxyXG4gICAgfVxyXG4gICAgcG9pbnRlclByb3RvdHlwZSA9IG5ldyBQcm94eShcclxuICAgICAgcG9pbnRlclByb3RvdHlwZSxcclxuICAgICAgc2VsZi5oYW5kbGVyTXVsdGlwbGVQcm90b3R5cGVDaGFpblBhdHRlcm4oe1xyXG4gICAgICAgIGRlbGVnYXRlZFByb3RvdHlwZTogb2JqZWN0VG9BZGQsXHJcbiAgICAgIH0pLFxyXG4gICAgKVxyXG4gICAgT2JqZWN0LnNldFByb3RvdHlwZU9mKHByZXZpb3VzUHJvdG90eXBlLCBwb2ludGVyUHJvdG90eXBlKVxyXG4gICAgcmV0dXJuIHByb3RvdHlwZUNoYWluXHJcbiAgfVxyXG59XHJcblxyXG5leHBvcnQgeyBzZWxmIGFzIE11bHRpcGxlUHJvdG90eXBlQ2hhaW4gfVxyXG4iXX0=

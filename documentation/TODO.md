@@ -1,3 +1,0 @@
-- Make repository contain modules related to delegation. Call it "handlePrototypeDelegation"
-- ~Change repository name to "multiplePrototypeChainDelegation" as opposed to using 'inheritance' term.~
-- Consider splitting the implementation of `dynamicDelegation` into its own repository, and leave `multipleDelegation` separate.

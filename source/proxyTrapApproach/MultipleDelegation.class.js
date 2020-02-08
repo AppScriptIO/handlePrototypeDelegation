@@ -1,75 +1,74 @@
-import { proxyHandler } from './interceptHandler.js'
-import { $ } from './reference.js'
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.MultipleDelegation = void 0;var _interceptHandler = require("./interceptHandler.js");
+var _reference = require("./reference.js");let _Symbol$hasInstance, _$$setter;_Symbol$hasInstance =
 
-// 📦 Implement complex object delegation, allowing multiple parents to the same child. Implemented using Javascript proxies.
-export class MultipleDelegation {
-  /*     
-  There are more traps available, which are not used
-  The deleteProperty trap is a trap for deleting own properties. The proxy represents the inheritance, so this wouldn't make much sense. I let it attempt the deletion on the target, which should have no property anyway.
-  The isExtensible trap is a trap for getting the extensibility. Not much useful, given that an invariant forces it to return the same extensibility as the target. So I just let it redirect the operation to the target, which will be extensible.
-  The apply and construct traps are traps for calling or instantiating. They are only useful when the target is a function or a constructor.
-  */
-  static proxyHandler = proxyHandler
 
-  /** Trap `instanceof` - check if instance is of MultipleDelegation
-   * Note: this implemenation of trap redefines the purpose of `instanceof` to check for a direct/immediate instances only.
-   */
-  static [Symbol.hasInstance](instance) {
-    if (instance /**if not null/undefined*/ && typeof instance == 'object' && Boolean(Reflect.ownKeys(instance).includes($.target))) {
-      return Object.getPrototypeOf(instance[$.target]) === this.prototype // get prototype of the actual target not the proxy wrapping it.
-    }
-  }
 
-  // set prototype
-  // Note: 'this' should be the original target not the proxy around it.
-  [$.setter](prototype) {
-    if (!Array.isArray(prototype)) prototype = [prototype]
-    let prototypeList = [...this[$.list], ...prototype] // merge prototype arrays
-    this[$.list] = [...new Set(prototypeList)] // filter duplicate enteries.
+
+
+
+
+
+
+
+
+
+
+
+Symbol.hasInstance;_$$setter =
+
+
+
+
+
+
+
+_reference.$.setter;class MultipleDelegation {static [_Symbol$hasInstance](instance) {if (instance && typeof instance == 'object' && Boolean(Reflect.ownKeys(instance).includes(_reference.$.target))) {return Object.getPrototypeOf(instance[_reference.$.target]) === this.prototype;}}[_$$setter](prototype) {
+    if (!Array.isArray(prototype)) prototype = [prototype];
+    let prototypeList = [...this[_reference.$.list], ...prototype];
+    this[_reference.$.list] = [...new Set(prototypeList)];
   }
 
   constructor(delegationList = []) {
-    // this = The target is not meant to be accessable externally through the wrapper proxy.
-    let target = this
 
-    target[$.list] = []
-    target[$.setter](delegationList) // initialize multiple delegaiton list property.
-    target[$.target] = target
-    let proxy = new Proxy(target, MultipleDelegation.proxyHandler)
-    // debugging - when console logging it will mark object as proxy and in inspector debugging too.
-    target[$.metadata] = {
+    let target = this;
+
+    target[_reference.$.list] = [];
+    target[_reference.$.setter](delegationList);
+    target[_reference.$.target] = target;
+    let proxy = new Proxy(target, MultipleDelegation.proxyHandler);
+
+    target[_reference.$.metadata] = {
       type: 'Multiple delegation proxy',
       get delegationList() {
-        return target[$.list]
-      },
-    }
-    return { proxy, target }
+        return target[_reference.$.list];
+      } };
+
+    return { proxy, target };
   }
 
-  /** Support multiple delegated prototype property lookup, where the target's prototype is overwritten by a proxy. */
-  static addDelegation({ targetObject, delegationList = [] }) {
-    if (delegationList.length == 0) return
 
-    let currentPrototype = targetObject |> Object.getPrototypeOf
-    delegationList.unshift(currentPrototype) // Note: duplicates are removed during storage of the prototype array.
+  static addDelegation({ targetObject, delegationList = [] }) {var _targetObject, _targetObject2;
+    if (delegationList.length == 0) return;
+
+    let currentPrototype = (_targetObject = targetObject, Object.getPrototypeOf(_targetObject));
+    delegationList.unshift(currentPrototype);
 
     if (!(currentPrototype instanceof MultipleDelegation)) {
-      let { proxy } = new MultipleDelegation()
-      // Delegate to proxy that will handle and redirect fundamental operations to the appropriate object.
-      Object.setPrototypeOf(targetObject, proxy)
+      let { proxy } = new MultipleDelegation();
+
+      Object.setPrototypeOf(targetObject, proxy);
     }
 
-    let multipleDelegationProxy = targetObject |> Object.getPrototypeOf // instance of MultipleDelegation class that will be used as the prototype of the target object
-    delegationList = delegationList.filter(item => item && item !== multipleDelegationProxy) // remove circular delegaiton and null values
-    multipleDelegationProxy[$.target][$.setter](delegationList) // add delegation prototypes to multiple delelgation proxy.
-  }
+    let multipleDelegationProxy = (_targetObject2 = targetObject, Object.getPrototypeOf(_targetObject2));
+    delegationList = delegationList.filter(item => item && item !== multipleDelegationProxy);
+    multipleDelegationProxy[_reference.$.target][_reference.$.setter](delegationList);
+  }}exports.MultipleDelegation = MultipleDelegation;MultipleDelegation.proxyHandler = _interceptHandler.proxyHandler;MultipleDelegation.
 
-  // 🧪 Used for unit tests
-  static debugging = {
-    // extract keys used in MultipleDelegation instances (actual target of proxy)
-    get keyUsedOnTargetInstance() {
-      let { target } = new MultipleDelegation()
-      return Reflect.ownKeys(target)
-    },
-  }
-}
+
+debugging = {
+
+  get keyUsedOnTargetInstance() {
+    let { target } = new MultipleDelegation();
+    return Reflect.ownKeys(target);
+  } };
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NvdXJjZS9wcm94eVRyYXBBcHByb2FjaC9NdWx0aXBsZURlbGVnYXRpb24uY2xhc3MuanMiXSwibmFtZXMiOlsiU3ltYm9sIiwiaGFzSW5zdGFuY2UiLCIkIiwic2V0dGVyIiwiTXVsdGlwbGVEZWxlZ2F0aW9uIiwiaW5zdGFuY2UiLCJCb29sZWFuIiwiUmVmbGVjdCIsIm93bktleXMiLCJpbmNsdWRlcyIsInRhcmdldCIsIk9iamVjdCIsImdldFByb3RvdHlwZU9mIiwicHJvdG90eXBlIiwiQXJyYXkiLCJpc0FycmF5IiwicHJvdG90eXBlTGlzdCIsImxpc3QiLCJTZXQiLCJjb25zdHJ1Y3RvciIsImRlbGVnYXRpb25MaXN0IiwicHJveHkiLCJQcm94eSIsInByb3h5SGFuZGxlciIsIm1ldGFkYXRhIiwidHlwZSIsImFkZERlbGVnYXRpb24iLCJ0YXJnZXRPYmplY3QiLCJsZW5ndGgiLCJjdXJyZW50UHJvdG90eXBlIiwidW5zaGlmdCIsInNldFByb3RvdHlwZU9mIiwibXVsdGlwbGVEZWxlZ2F0aW9uUHJveHkiLCJmaWx0ZXIiLCJpdGVtIiwiZGVidWdnaW5nIiwia2V5VXNlZE9uVGFyZ2V0SW5zdGFuY2UiXSwibWFwcGluZ3MiOiIrR0FBQTtBQUNBLDJDOzs7Ozs7Ozs7Ozs7Ozs7QUFlVUEsTUFBTSxDQUFDQyxXOzs7Ozs7OztBQVFkQyxhQUFFQyxNLENBcEJFLE1BQU1DLGtCQUFOLENBQXlCLENBWTlCLDZCQUE0QkMsUUFBNUIsRUFBc0MsQ0FDcEMsSUFBSUEsUUFBUSxJQUErQixPQUFPQSxRQUFQLElBQW1CLFFBQTFELElBQXNFQyxPQUFPLENBQUNDLE9BQU8sQ0FBQ0MsT0FBUixDQUFnQkgsUUFBaEIsRUFBMEJJLFFBQTFCLENBQW1DUCxhQUFFUSxNQUFyQyxDQUFELENBQWpGLEVBQWlJLENBQy9ILE9BQU9DLE1BQU0sQ0FBQ0MsY0FBUCxDQUFzQlAsUUFBUSxDQUFDSCxhQUFFUSxNQUFILENBQTlCLE1BQThDLEtBQUtHLFNBQTFELENBQ0QsQ0FDRixDQUlELFlBQVdBLFNBQVgsRUFBc0I7QUFDcEIsUUFBSSxDQUFDQyxLQUFLLENBQUNDLE9BQU4sQ0FBY0YsU0FBZCxDQUFMLEVBQStCQSxTQUFTLEdBQUcsQ0FBQ0EsU0FBRCxDQUFaO0FBQy9CLFFBQUlHLGFBQWEsR0FBRyxDQUFDLEdBQUcsS0FBS2QsYUFBRWUsSUFBUCxDQUFKLEVBQWtCLEdBQUdKLFNBQXJCLENBQXBCO0FBQ0EsU0FBS1gsYUFBRWUsSUFBUCxJQUFlLENBQUMsR0FBRyxJQUFJQyxHQUFKLENBQVFGLGFBQVIsQ0FBSixDQUFmO0FBQ0Q7O0FBRURHLEVBQUFBLFdBQVcsQ0FBQ0MsY0FBYyxHQUFHLEVBQWxCLEVBQXNCOztBQUUvQixRQUFJVixNQUFNLEdBQUcsSUFBYjs7QUFFQUEsSUFBQUEsTUFBTSxDQUFDUixhQUFFZSxJQUFILENBQU4sR0FBaUIsRUFBakI7QUFDQVAsSUFBQUEsTUFBTSxDQUFDUixhQUFFQyxNQUFILENBQU4sQ0FBaUJpQixjQUFqQjtBQUNBVixJQUFBQSxNQUFNLENBQUNSLGFBQUVRLE1BQUgsQ0FBTixHQUFtQkEsTUFBbkI7QUFDQSxRQUFJVyxLQUFLLEdBQUcsSUFBSUMsS0FBSixDQUFVWixNQUFWLEVBQWtCTixrQkFBa0IsQ0FBQ21CLFlBQXJDLENBQVo7O0FBRUFiLElBQUFBLE1BQU0sQ0FBQ1IsYUFBRXNCLFFBQUgsQ0FBTixHQUFxQjtBQUNuQkMsTUFBQUEsSUFBSSxFQUFFLDJCQURhO0FBRW5CLFVBQUlMLGNBQUosR0FBcUI7QUFDbkIsZUFBT1YsTUFBTSxDQUFDUixhQUFFZSxJQUFILENBQWI7QUFDRCxPQUprQixFQUFyQjs7QUFNQSxXQUFPLEVBQUVJLEtBQUYsRUFBU1gsTUFBVCxFQUFQO0FBQ0Q7OztBQUdELFNBQU9nQixhQUFQLENBQXFCLEVBQUVDLFlBQUYsRUFBZ0JQLGNBQWMsR0FBRyxFQUFqQyxFQUFyQixFQUE0RDtBQUMxRCxRQUFJQSxjQUFjLENBQUNRLE1BQWYsSUFBeUIsQ0FBN0IsRUFBZ0M7O0FBRWhDLFFBQUlDLGdCQUFnQixvQkFBR0YsWUFBSCxFQUFtQmhCLE1BQU0sQ0FBQ0MsY0FBMUIsZ0JBQXBCO0FBQ0FRLElBQUFBLGNBQWMsQ0FBQ1UsT0FBZixDQUF1QkQsZ0JBQXZCOztBQUVBLFFBQUksRUFBRUEsZ0JBQWdCLFlBQVl6QixrQkFBOUIsQ0FBSixFQUF1RDtBQUNyRCxVQUFJLEVBQUVpQixLQUFGLEtBQVksSUFBSWpCLGtCQUFKLEVBQWhCOztBQUVBTyxNQUFBQSxNQUFNLENBQUNvQixjQUFQLENBQXNCSixZQUF0QixFQUFvQ04sS0FBcEM7QUFDRDs7QUFFRCxRQUFJVyx1QkFBdUIscUJBQUdMLFlBQUgsRUFBbUJoQixNQUFNLENBQUNDLGNBQTFCLGlCQUEzQjtBQUNBUSxJQUFBQSxjQUFjLEdBQUdBLGNBQWMsQ0FBQ2EsTUFBZixDQUFzQkMsSUFBSSxJQUFJQSxJQUFJLElBQUlBLElBQUksS0FBS0YsdUJBQS9DLENBQWpCO0FBQ0FBLElBQUFBLHVCQUF1QixDQUFDOUIsYUFBRVEsTUFBSCxDQUF2QixDQUFrQ1IsYUFBRUMsTUFBcEMsRUFBNENpQixjQUE1QztBQUNELEdBNUQ2QixDLGdEQUFuQmhCLGtCLENBT0ptQixZLEdBQWVBLDhCLENBUFhuQixrQjs7O0FBK0RKK0IsUyxHQUFZOztBQUVqQixNQUFJQyx1QkFBSixHQUE4QjtBQUM1QixRQUFJLEVBQUUxQixNQUFGLEtBQWEsSUFBSU4sa0JBQUosRUFBakI7QUFDQSxXQUFPRyxPQUFPLENBQUNDLE9BQVIsQ0FBZ0JFLE1BQWhCLENBQVA7QUFDRCxHQUxnQixFIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgcHJveHlIYW5kbGVyIH0gZnJvbSAnLi9pbnRlcmNlcHRIYW5kbGVyLmpzJ1xuaW1wb3J0IHsgJCB9IGZyb20gJy4vcmVmZXJlbmNlLmpzJ1xuXG4vLyDwn5OmIEltcGxlbWVudCBjb21wbGV4IG9iamVjdCBkZWxlZ2F0aW9uLCBhbGxvd2luZyBtdWx0aXBsZSBwYXJlbnRzIHRvIHRoZSBzYW1lIGNoaWxkLiBJbXBsZW1lbnRlZCB1c2luZyBKYXZhc2NyaXB0IHByb3hpZXMuXG5leHBvcnQgY2xhc3MgTXVsdGlwbGVEZWxlZ2F0aW9uIHtcbiAgLyogICAgIFxuICBUaGVyZSBhcmUgbW9yZSB0cmFwcyBhdmFpbGFibGUsIHdoaWNoIGFyZSBub3QgdXNlZFxuICBUaGUgZGVsZXRlUHJvcGVydHkgdHJhcCBpcyBhIHRyYXAgZm9yIGRlbGV0aW5nIG93biBwcm9wZXJ0aWVzLiBUaGUgcHJveHkgcmVwcmVzZW50cyB0aGUgaW5oZXJpdGFuY2UsIHNvIHRoaXMgd291bGRuJ3QgbWFrZSBtdWNoIHNlbnNlLiBJIGxldCBpdCBhdHRlbXB0IHRoZSBkZWxldGlvbiBvbiB0aGUgdGFyZ2V0LCB3aGljaCBzaG91bGQgaGF2ZSBubyBwcm9wZXJ0eSBhbnl3YXkuXG4gIFRoZSBpc0V4dGVuc2libGUgdHJhcCBpcyBhIHRyYXAgZm9yIGdldHRpbmcgdGhlIGV4dGVuc2liaWxpdHkuIE5vdCBtdWNoIHVzZWZ1bCwgZ2l2ZW4gdGhhdCBhbiBpbnZhcmlhbnQgZm9yY2VzIGl0IHRvIHJldHVybiB0aGUgc2FtZSBleHRlbnNpYmlsaXR5IGFzIHRoZSB0YXJnZXQuIFNvIEkganVzdCBsZXQgaXQgcmVkaXJlY3QgdGhlIG9wZXJhdGlvbiB0byB0aGUgdGFyZ2V0LCB3aGljaCB3aWxsIGJlIGV4dGVuc2libGUuXG4gIFRoZSBhcHBseSBhbmQgY29uc3RydWN0IHRyYXBzIGFyZSB0cmFwcyBmb3IgY2FsbGluZyBvciBpbnN0YW50aWF0aW5nLiBUaGV5IGFyZSBvbmx5IHVzZWZ1bCB3aGVuIHRoZSB0YXJnZXQgaXMgYSBmdW5jdGlvbiBvciBhIGNvbnN0cnVjdG9yLlxuICAqL1xuICBzdGF0aWMgcHJveHlIYW5kbGVyID0gcHJveHlIYW5kbGVyXG5cbiAgLyoqIFRyYXAgYGluc3RhbmNlb2ZgIC0gY2hlY2sgaWYgaW5zdGFuY2UgaXMgb2YgTXVsdGlwbGVEZWxlZ2F0aW9uXG4gICAqIE5vdGU6IHRoaXMgaW1wbGVtZW5hdGlvbiBvZiB0cmFwIHJlZGVmaW5lcyB0aGUgcHVycG9zZSBvZiBgaW5zdGFuY2VvZmAgdG8gY2hlY2sgZm9yIGEgZGlyZWN0L2ltbWVkaWF0ZSBpbnN0YW5jZXMgb25seS5cbiAgICovXG4gIHN0YXRpYyBbU3ltYm9sLmhhc0luc3RhbmNlXShpbnN0YW5jZSkge1xuICAgIGlmIChpbnN0YW5jZSAvKippZiBub3QgbnVsbC91bmRlZmluZWQqLyAmJiB0eXBlb2YgaW5zdGFuY2UgPT0gJ29iamVjdCcgJiYgQm9vbGVhbihSZWZsZWN0Lm93bktleXMoaW5zdGFuY2UpLmluY2x1ZGVzKCQudGFyZ2V0KSkpIHtcbiAgICAgIHJldHVybiBPYmplY3QuZ2V0UHJvdG90eXBlT2YoaW5zdGFuY2VbJC50YXJnZXRdKSA9PT0gdGhpcy5wcm90b3R5cGUgLy8gZ2V0IHByb3RvdHlwZSBvZiB0aGUgYWN0dWFsIHRhcmdldCBub3QgdGhlIHByb3h5IHdyYXBwaW5nIGl0LlxuICAgIH1cbiAgfVxuXG4gIC8vIHNldCBwcm90b3R5cGVcbiAgLy8gTm90ZTogJ3RoaXMnIHNob3VsZCBiZSB0aGUgb3JpZ2luYWwgdGFyZ2V0IG5vdCB0aGUgcHJveHkgYXJvdW5kIGl0LlxuICBbJC5zZXR0ZXJdKHByb3RvdHlwZSkge1xuICAgIGlmICghQXJyYXkuaXNBcnJheShwcm90b3R5cGUpKSBwcm90b3R5cGUgPSBbcHJvdG90eXBlXVxuICAgIGxldCBwcm90b3R5cGVMaXN0ID0gWy4uLnRoaXNbJC5saXN0XSwgLi4ucHJvdG90eXBlXSAvLyBtZXJnZSBwcm90b3R5cGUgYXJyYXlzXG4gICAgdGhpc1skLmxpc3RdID0gWy4uLm5ldyBTZXQocHJvdG90eXBlTGlzdCldIC8vIGZpbHRlciBkdXBsaWNhdGUgZW50ZXJpZXMuXG4gIH1cblxuICBjb25zdHJ1Y3RvcihkZWxlZ2F0aW9uTGlzdCA9IFtdKSB7XG4gICAgLy8gdGhpcyA9IFRoZSB0YXJnZXQgaXMgbm90IG1lYW50IHRvIGJlIGFjY2Vzc2FibGUgZXh0ZXJuYWxseSB0aHJvdWdoIHRoZSB3cmFwcGVyIHByb3h5LlxuICAgIGxldCB0YXJnZXQgPSB0aGlzXG5cbiAgICB0YXJnZXRbJC5saXN0XSA9IFtdXG4gICAgdGFyZ2V0WyQuc2V0dGVyXShkZWxlZ2F0aW9uTGlzdCkgLy8gaW5pdGlhbGl6ZSBtdWx0aXBsZSBkZWxlZ2FpdG9uIGxpc3QgcHJvcGVydHkuXG4gICAgdGFyZ2V0WyQudGFyZ2V0XSA9IHRhcmdldFxuICAgIGxldCBwcm94eSA9IG5ldyBQcm94eSh0YXJnZXQsIE11bHRpcGxlRGVsZWdhdGlvbi5wcm94eUhhbmRsZXIpXG4gICAgLy8gZGVidWdnaW5nIC0gd2hlbiBjb25zb2xlIGxvZ2dpbmcgaXQgd2lsbCBtYXJrIG9iamVjdCBhcyBwcm94eSBhbmQgaW4gaW5zcGVjdG9yIGRlYnVnZ2luZyB0b28uXG4gICAgdGFyZ2V0WyQubWV0YWRhdGFdID0ge1xuICAgICAgdHlwZTogJ011bHRpcGxlIGRlbGVnYXRpb24gcHJveHknLFxuICAgICAgZ2V0IGRlbGVnYXRpb25MaXN0KCkge1xuICAgICAgICByZXR1cm4gdGFyZ2V0WyQubGlzdF1cbiAgICAgIH0sXG4gICAgfVxuICAgIHJldHVybiB7IHByb3h5LCB0YXJnZXQgfVxuICB9XG5cbiAgLyoqIFN1cHBvcnQgbXVsdGlwbGUgZGVsZWdhdGVkIHByb3RvdHlwZSBwcm9wZXJ0eSBsb29rdXAsIHdoZXJlIHRoZSB0YXJnZXQncyBwcm90b3R5cGUgaXMgb3ZlcndyaXR0ZW4gYnkgYSBwcm94eS4gKi9cbiAgc3RhdGljIGFkZERlbGVnYXRpb24oeyB0YXJnZXRPYmplY3QsIGRlbGVnYXRpb25MaXN0ID0gW10gfSkge1xuICAgIGlmIChkZWxlZ2F0aW9uTGlzdC5sZW5ndGggPT0gMCkgcmV0dXJuXG5cbiAgICBsZXQgY3VycmVudFByb3RvdHlwZSA9IHRhcmdldE9iamVjdCB8PiBPYmplY3QuZ2V0UHJvdG90eXBlT2ZcbiAgICBkZWxlZ2F0aW9uTGlzdC51bnNoaWZ0KGN1cnJlbnRQcm90b3R5cGUpIC8vIE5vdGU6IGR1cGxpY2F0ZXMgYXJlIHJlbW92ZWQgZHVyaW5nIHN0b3JhZ2Ugb2YgdGhlIHByb3RvdHlwZSBhcnJheS5cblxuICAgIGlmICghKGN1cnJlbnRQcm90b3R5cGUgaW5zdGFuY2VvZiBNdWx0aXBsZURlbGVnYXRpb24pKSB7XG4gICAgICBsZXQgeyBwcm94eSB9ID0gbmV3IE11bHRpcGxlRGVsZWdhdGlvbigpXG4gICAgICAvLyBEZWxlZ2F0ZSB0byBwcm94eSB0aGF0IHdpbGwgaGFuZGxlIGFuZCByZWRpcmVjdCBmdW5kYW1lbnRhbCBvcGVyYXRpb25zIHRvIHRoZSBhcHByb3ByaWF0ZSBvYmplY3QuXG4gICAgICBPYmplY3Quc2V0UHJvdG90eXBlT2YodGFyZ2V0T2JqZWN0LCBwcm94eSlcbiAgICB9XG5cbiAgICBsZXQgbXVsdGlwbGVEZWxlZ2F0aW9uUHJveHkgPSB0YXJnZXRPYmplY3QgfD4gT2JqZWN0LmdldFByb3RvdHlwZU9mIC8vIGluc3RhbmNlIG9mIE11bHRpcGxlRGVsZWdhdGlvbiBjbGFzcyB0aGF0IHdpbGwgYmUgdXNlZCBhcyB0aGUgcHJvdG90eXBlIG9mIHRoZSB0YXJnZXQgb2JqZWN0XG4gICAgZGVsZWdhdGlvbkxpc3QgPSBkZWxlZ2F0aW9uTGlzdC5maWx0ZXIoaXRlbSA9PiBpdGVtICYmIGl0ZW0gIT09IG11bHRpcGxlRGVsZWdhdGlvblByb3h5KSAvLyByZW1vdmUgY2lyY3VsYXIgZGVsZWdhaXRvbiBhbmQgbnVsbCB2YWx1ZXNcbiAgICBtdWx0aXBsZURlbGVnYXRpb25Qcm94eVskLnRhcmdldF1bJC5zZXR0ZXJdKGRlbGVnYXRpb25MaXN0KSAvLyBhZGQgZGVsZWdhdGlvbiBwcm90b3R5cGVzIHRvIG11bHRpcGxlIGRlbGVsZ2F0aW9uIHByb3h5LlxuICB9XG5cbiAgLy8g8J+nqiBVc2VkIGZvciB1bml0IHRlc3RzXG4gIHN0YXRpYyBkZWJ1Z2dpbmcgPSB7XG4gICAgLy8gZXh0cmFjdCBrZXlzIHVzZWQgaW4gTXVsdGlwbGVEZWxlZ2F0aW9uIGluc3RhbmNlcyAoYWN0dWFsIHRhcmdldCBvZiBwcm94eSlcbiAgICBnZXQga2V5VXNlZE9uVGFyZ2V0SW5zdGFuY2UoKSB7XG4gICAgICBsZXQgeyB0YXJnZXQgfSA9IG5ldyBNdWx0aXBsZURlbGVnYXRpb24oKVxuICAgICAgcmV0dXJuIFJlZmxlY3Qub3duS2V5cyh0YXJnZXQpXG4gICAgfSxcbiAgfVxufVxuIl19

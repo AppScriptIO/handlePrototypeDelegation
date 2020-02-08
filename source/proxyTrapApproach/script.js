@@ -1,2 +1,3 @@
-export { MultipleDelegation } from './MultipleDelegation.class.js'
-export { $ } from './reference.js'
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });Object.defineProperty(exports, "MultipleDelegation", { enumerable: true, get: function () {return _MultipleDelegationClass.MultipleDelegation;} });Object.defineProperty(exports, "$", { enumerable: true, get: function () {return _reference.$;} });var _MultipleDelegationClass = require("./MultipleDelegation.class.js");
+var _reference = require("./reference.js");
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NvdXJjZS9wcm94eVRyYXBBcHByb2FjaC9zY3JpcHQuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6ImlVQUFBO0FBQ0EiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgeyBNdWx0aXBsZURlbGVnYXRpb24gfSBmcm9tICcuL011bHRpcGxlRGVsZWdhdGlvbi5jbGFzcy5qcydcbmV4cG9ydCB7ICQgfSBmcm9tICcuL3JlZmVyZW5jZS5qcydcbiJdfQ==

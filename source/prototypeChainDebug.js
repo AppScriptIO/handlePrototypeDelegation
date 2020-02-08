@@ -1,43 +1,44 @@
-/**
-📦 Debugging prototype delegation, specially when proxy wrapped objects exist in the prototype chain.
- * Adds prototype information on static classes, prototypes, and instances.
- * Returns a proxy with traps to add meta information.
- */
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.classDecorator = prototypeChainDebug;exports.default = void 0;
+
+
+
+
 function prototypeChainDebug(Class) {
-  // Static class
+
   Class.meta = {
     Class: `${Class.name}`,
-    Type: 'static',
-  }
+    Type: 'static' };
 
-  // Prototype
+
+
   Class.prototype.meta = {
     Class: `${Class.name}`,
-    Type: 'prototype',
-  }
+    Type: 'prototype' };
 
-  // // Instance
-  Class = new Proxy(Class, {
-    //     // construct: function(target, argumentsList, newTarget) { // not working causes errors - because the original subclass is not being used to create the instance i.e. superclass creates the isntance & newTarget isn't always pointing to the original class called.
-    //     //     let instance = new target(...argumentsList)
-    //     //     instance.meta = {
-    //     //         Class: `${Class.name}`,
-    //     //         Type: 'instance'
-    //     //     }
-    //     //     return instance
-    //     // },
-    //     // apply is called, when 'new' is invoked, because of the ES5 transpilation mimicking class feature.
-    //     // apply: function(target, thisArg, argumentsList) {
-    //     //     console.log(target)
-    //     //     console.log(thisArg)
-    //     //     console.log(argumentsList)
-    //     //     let instance = new target(...argumentsList)
-    //     //     return instance
-    //     // }
-  })
 
-  return Class
-}
 
-export { prototypeChainDebug as classDecorator }
-export default prototypeChainDebug
+  Class = new Proxy(Class, {});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  return Class;
+}var _default =
+
+
+prototypeChainDebug;exports.default = _default;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NvdXJjZS9wcm90b3R5cGVDaGFpbkRlYnVnLmpzIl0sIm5hbWVzIjpbInByb3RvdHlwZUNoYWluRGVidWciLCJDbGFzcyIsIm1ldGEiLCJuYW1lIiwiVHlwZSIsInByb3RvdHlwZSIsIlByb3h5Il0sIm1hcHBpbmdzIjoiOzs7OztBQUtBLFNBQVNBLG1CQUFULENBQTZCQyxLQUE3QixFQUFvQzs7QUFFbENBLEVBQUFBLEtBQUssQ0FBQ0MsSUFBTixHQUFhO0FBQ1hELElBQUFBLEtBQUssRUFBRyxHQUFFQSxLQUFLLENBQUNFLElBQUssRUFEVjtBQUVYQyxJQUFBQSxJQUFJLEVBQUUsUUFGSyxFQUFiOzs7O0FBTUFILEVBQUFBLEtBQUssQ0FBQ0ksU0FBTixDQUFnQkgsSUFBaEIsR0FBdUI7QUFDckJELElBQUFBLEtBQUssRUFBRyxHQUFFQSxLQUFLLENBQUNFLElBQUssRUFEQTtBQUVyQkMsSUFBQUEsSUFBSSxFQUFFLFdBRmUsRUFBdkI7Ozs7QUFNQUgsRUFBQUEsS0FBSyxHQUFHLElBQUlLLEtBQUosQ0FBVUwsS0FBVixFQUFpQixFQUFqQixDQUFSOzs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBbUJBLFNBQU9BLEtBQVA7QUFDRCxDOzs7QUFHY0QsbUIiLCJzb3VyY2VzQ29udGVudCI6WyIvKipcbvCfk6YgRGVidWdnaW5nIHByb3RvdHlwZSBkZWxlZ2F0aW9uLCBzcGVjaWFsbHkgd2hlbiBwcm94eSB3cmFwcGVkIG9iamVjdHMgZXhpc3QgaW4gdGhlIHByb3RvdHlwZSBjaGFpbi5cbiAqIEFkZHMgcHJvdG90eXBlIGluZm9ybWF0aW9uIG9uIHN0YXRpYyBjbGFzc2VzLCBwcm90b3R5cGVzLCBhbmQgaW5zdGFuY2VzLlxuICogUmV0dXJucyBhIHByb3h5IHdpdGggdHJhcHMgdG8gYWRkIG1ldGEgaW5mb3JtYXRpb24uXG4gKi9cbmZ1bmN0aW9uIHByb3RvdHlwZUNoYWluRGVidWcoQ2xhc3MpIHtcbiAgLy8gU3RhdGljIGNsYXNzXG4gIENsYXNzLm1ldGEgPSB7XG4gICAgQ2xhc3M6IGAke0NsYXNzLm5hbWV9YCxcbiAgICBUeXBlOiAnc3RhdGljJyxcbiAgfVxuXG4gIC8vIFByb3RvdHlwZVxuICBDbGFzcy5wcm90b3R5cGUubWV0YSA9IHtcbiAgICBDbGFzczogYCR7Q2xhc3MubmFtZX1gLFxuICAgIFR5cGU6ICdwcm90b3R5cGUnLFxuICB9XG5cbiAgLy8gLy8gSW5zdGFuY2VcbiAgQ2xhc3MgPSBuZXcgUHJveHkoQ2xhc3MsIHtcbiAgICAvLyAgICAgLy8gY29uc3RydWN0OiBmdW5jdGlvbih0YXJnZXQsIGFyZ3VtZW50c0xpc3QsIG5ld1RhcmdldCkgeyAvLyBub3Qgd29ya2luZyBjYXVzZXMgZXJyb3JzIC0gYmVjYXVzZSB0aGUgb3JpZ2luYWwgc3ViY2xhc3MgaXMgbm90IGJlaW5nIHVzZWQgdG8gY3JlYXRlIHRoZSBpbnN0YW5jZSBpLmUuIHN1cGVyY2xhc3MgY3JlYXRlcyB0aGUgaXNudGFuY2UgJiBuZXdUYXJnZXQgaXNuJ3QgYWx3YXlzIHBvaW50aW5nIHRvIHRoZSBvcmlnaW5hbCBjbGFzcyBjYWxsZWQuXG4gICAgLy8gICAgIC8vICAgICBsZXQgaW5zdGFuY2UgPSBuZXcgdGFyZ2V0KC4uLmFyZ3VtZW50c0xpc3QpXG4gICAgLy8gICAgIC8vICAgICBpbnN0YW5jZS5tZXRhID0ge1xuICAgIC8vICAgICAvLyAgICAgICAgIENsYXNzOiBgJHtDbGFzcy5uYW1lfWAsXG4gICAgLy8gICAgIC8vICAgICAgICAgVHlwZTogJ2luc3RhbmNlJ1xuICAgIC8vICAgICAvLyAgICAgfVxuICAgIC8vICAgICAvLyAgICAgcmV0dXJuIGluc3RhbmNlXG4gICAgLy8gICAgIC8vIH0sXG4gICAgLy8gICAgIC8vIGFwcGx5IGlzIGNhbGxlZCwgd2hlbiAnbmV3JyBpcyBpbnZva2VkLCBiZWNhdXNlIG9mIHRoZSBFUzUgdHJhbnNwaWxhdGlvbiBtaW1pY2tpbmcgY2xhc3MgZmVhdHVyZS5cbiAgICAvLyAgICAgLy8gYXBwbHk6IGZ1bmN0aW9uKHRhcmdldCwgdGhpc0FyZywgYXJndW1lbnRzTGlzdCkge1xuICAgIC8vICAgICAvLyAgICAgY29uc29sZS5sb2codGFyZ2V0KVxuICAgIC8vICAgICAvLyAgICAgY29uc29sZS5sb2codGhpc0FyZylcbiAgICAvLyAgICAgLy8gICAgIGNvbnNvbGUubG9nKGFyZ3VtZW50c0xpc3QpXG4gICAgLy8gICAgIC8vICAgICBsZXQgaW5zdGFuY2UgPSBuZXcgdGFyZ2V0KC4uLmFyZ3VtZW50c0xpc3QpXG4gICAgLy8gICAgIC8vICAgICByZXR1cm4gaW5zdGFuY2VcbiAgICAvLyAgICAgLy8gfVxuICB9KVxuXG4gIHJldHVybiBDbGFzc1xufVxuXG5leHBvcnQgeyBwcm90b3R5cGVDaGFpbkRlYnVnIGFzIGNsYXNzRGVjb3JhdG9yIH1cbmV4cG9ydCBkZWZhdWx0IHByb3RvdHlwZUNoYWluRGVidWdcbiJdfQ==
